@@ -1,0 +1,13 @@
+#
+# Initialize bash
+# (regardless of interactive/script/ssh/whatever)
+#
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+[ -r ~/.bash/profile ] && source ~/.bash/profile
+[ -r ~/.bash/local   ] && source ~/.bash/local
+[ -r ~/.bash/rc      ] && source ~/.bash/rc
