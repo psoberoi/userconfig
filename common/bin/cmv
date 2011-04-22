@@ -1,0 +1,340 @@
+#!/usr/bin/perl -w
+eval 'exec perl -w -S "$0" "$@"'	# -*- mode: perl -*-
+  if 0;
+
+# cmv - rename multiple files in complex ways easily
+#
+# author: Felix Lee <felix.cmv1@tigerfood.org>
+# source: http://tigerfood.org/felix/cmv
+
+use strict;
+use File::Basename;
+use Getopt::Long;
+
+my $argv0 = basename ($0);
+my $rcsid = q$Revision: 1.20 $ . q$Date: 2002/12/12 10:10:05 $;
+
+my $long_help = <<"!";
+Usage: $argv0 [OPTION...] PERL_EXPR FILENAME...
+
+$argv0 renames multiple files in complex ways easily.
+
+Options:
+  -d, --mkdir		Create any directories necessary.
+  -n, --nonono		Don't do it, just print 'mv' commands.
+  -q, --quiet		Don't print the 'mv' commands.
+
+This program applies PERL_EXPR to each FILENAME and then
+renames all the files to the new filenames, being careful to
+do it in the right order so that none of the files
+disappear.  File renaming loops are also handled correctly
+by using a temporary name when necessary.
+
+A filename is assigned to \$_ before running PERL_EXPR, and
+the new filename is read from \$_ after PERL_EXPR is done.
+
+Examples:
+  $argv0 'tr/A-Z/a-z/' *        lowercase all filenames
+  $argv0 's/\\d+/\$& + 1/e' *     increment a number in each filename
+  $argv0 -d 's(-)(/)' *.mp3     split files into subdirectories
+
+Note: the 'mv' commands printed can be fed directly to sh.
+Quoting and other issues are handled correctly.  However, if
+you run this program without the -n flag, it doesn't
+actually execute 'mv', it uses an internal mv-like routine
+instead.  So the command:
+  $argv0 ARGS
+may behave slightly differently than:
+  $argv0 -n ARGS | sh
+
+In particular, $argv0 doesn't know how to move files across
+filesystems (yet), so you should feed the output to sh if
+you want to do that.
+
+[ $argv0 $rcsid]
+!
+
+my $short_help = <<"!";
+Usage: $argv0 [OPTION...] PERL_EXPR FILENAME...
+$argv0 renames multiple files in complex ways easily.
+'$argv0 --help' for more detail.
+[ $argv0 $rcsid]
+!
+
+my %opt =
+  (
+   Mkdir => 0,
+   Nonono => 0,
+   Quiet => 0,
+  );
+
+GetOptions
+  (
+   "help|h"	=> sub { warn $long_help; exit 2; },
+   "mkdir|d"	=> sub { $opt{Mkdir} = 1; },
+   "nonono|n"	=> sub { $opt{Nonono} = 1; },
+   "quiet|q"	=> sub { $opt{Quiet} = 1; },
+  )
+  or die $short_help;
+
+if (@ARGV == 0) {
+  die $short_help;
+}
+
+my $expr = shift @ARGV;
+
+my $operator = eval "{no strict; sub { $expr; }}";
+if (! $operator) {
+  die "$argv0: Couldn't compile the Perl expression {$expr}: $@\n";
+}
+
+# XXX read stdin for a list of files if no args?
+# if (@ARGV == 0) {
+#   chomp (@ARGV = <STDIN>);
+# }
+
+my $errors = 0;
+my $renames = 0;
+my $widest = 0;
+
+my %new = ();
+my %old = ();
+
+my %would_mkdir = ();
+
+for my $old (@ARGV) {
+  if (exists $new{$old}) {
+    warn "$argv0: Repeated filename: ", q1 ($old), "\n";
+    next;
+  }
+
+  $_ = $old;
+  & $operator;
+  my $new = $_;
+
+  if ($new eq $old) {
+    next;
+  }
+
+  if ($new eq '') {
+    warn "$argv0: Filename ", q1 ($old), " becomes null.\n";
+    ++ $errors;
+    next;
+  }
+
+  if (exists $old{$new}) {
+    warn "$argv0: Rename collision:\n";
+    warn "$argv0:   ", q1 ($new), " <= ", q1 ($old), "\n";
+    warn "$argv0:   ", q1 ($new), " <= ", q1 ($old{$new}), "\n";
+    # XXX optionally generate a unique suffix?
+    ++ $errors;
+    next;
+  }
+
+  $old{$new} = $old;
+  $new{$old} = $new;
+
+  my $n = length (q1 ($old));
+  if ($widest < $n) {
+    $widest = $n;
+  }
+}
+
+if ($errors) {
+  exit 1;
+}
+
+
+# Follow each rename chain, mostly in alphabetical order.
+
+my @old = sort keys %new;
+
+while (@old) {
+  my $old = shift @old;
+  if (! exists $new{$old}) {
+    next;
+  }
+
+  my %visited = ();
+  my $new = $new{$old};
+
+  # find the end of the chain or loop
+  while (exists $new{$new} && ! $visited{$new}) {
+    $visited{$new} = 1;
+    $new = $new{$new};
+  }
+
+  if ($visited{$new}) {
+    rename_loop ($old{$new});
+  } else {
+    rename_chain ($new);
+  }
+}
+
+# report that something happened, so the user doesn't get confused.
+if (! $opt{Nonono} && ! $opt{Quiet}) {
+  print "  #  $renames files renamed\n";
+}
+
+exit 0;
+
+
+sub rename_chain {
+  my ($new) = @_;
+
+  while (exists $old{$new}) {
+    my $old = $old{$new};
+
+    do_rename ($old, $new);
+
+    delete $old{$new};
+    delete $new{$old};
+
+    $new = $old;
+  }
+}
+
+sub do_rename {
+  my ($old, $new) = @_;
+
+  do_mkdir (dirname ($new));
+
+  if (! $opt{Quiet}) {
+    printf "  mv -i %-${widest}s %s\n", q1 ($old), q1 ($new);
+  }
+
+  return if $opt{Nonono};
+
+  # if a nonexistent file has a newline in its name, perl
+  # 5.6 spits out a warning on the theory that the
+  # programmer forgot a chomp.  we want to disable that
+  # warning, but using 'no warnings' will fail on earlier
+  # perls.  so we just mess with $^W, sigh.
+  {
+    local $^W = 0;
+    stat ($new);
+  }
+  if (-e _) {
+    print STDERR "$argv0: replace ", q1 ($new), "? ";
+    if (<STDIN> !~ /^y/) {
+      return;
+    }
+  }
+
+  if (! rename ($old, $new)) {
+    # XXX should check for EXDEV and fall back to system("mv")
+    die "$argv0: rename ", q1 ($old), " ", q1 ($new), " failed: $!\n";
+  }
+  ++ $renames;
+}
+
+
+sub do_link {
+  my ($old, $new) = @_;
+
+  do_mkdir (dirname ($new));
+
+  if (! $opt{Quiet}) {
+    printf "  ln -i %-${widest}s %s\n", q1 ($old), q1 ($new);
+  }
+
+  return if $opt{Nonono};
+
+  if (-e $new) {
+    print STDERR "$argv0: replace ", q1 ($new), "? ";
+    if (<STDIN> !~ /^y/) {
+      return;
+    }
+  }
+
+  if (! link ($old, $new)) {
+    die "$argv0: link ", q1 ($old), " ", q1 ($new), " failed: $!\n";
+  }
+}
+
+
+sub do_mkdir {
+  my ($dir) = @_;
+
+  return if ! $opt{Mkdir};
+  return if -d $dir;
+  return if $would_mkdir{$dir};
+
+  my $parent = dirname ($dir);
+  if (! -d $parent) {
+    do_mkdir ($parent);
+  }
+
+  if (! $opt{Quiet}) {
+    print "  mkdir ", q1 ($dir), "\n";
+  }
+
+  $would_mkdir{$dir} = 1;
+
+  return if $opt{Nonono};
+
+  if (! mkdir ($dir, 0777)) {
+    die "$argv0: mkdir ", q1 ($dir), " failed: $!\n";
+  }
+}
+
+
+sub rename_loop {
+  my ($first) = @_;
+
+  my $tmp = tmpfile ($first);
+  my $new = $new{$first};
+
+  do_rename ($first, $tmp);
+  # that didn't count as a real rename
+  -- $renames;
+
+  delete $old{$new};
+  delete $new{$first};
+
+  rename_chain ($first);
+
+  do_rename ($tmp, $new);
+}
+
+
+# XXX there's a possible collision here if two processes
+# with the same pid run at the same time.
+
+sub tmpfile {
+  my ($name) = @_;
+
+  my $tries = 20;
+  my $seq = $$;
+  while (-- $tries) {
+    my $tmpfile = ",tmp.$seq";
+    if (! -f $tmpfile) {
+      return $tmpfile;
+    }
+    $seq += int (rand() * 17) + 1;
+  }
+  die "$argv0: Can't create a temporary filename for $name.\n";
+}
+
+
+# quote a filename in a way that's parsable by sh.
+
+sub q1 {
+  my ($name) = @_;
+
+  # add a backslash before unusual characters
+  $name =~ s|[^-a-zA-Z0-9_.,/]|\\$&|g;
+
+  # backslash newline gets ignored by sh, so we have to use quotes.
+  $name =~ s|\\\n|'\n'|g;
+
+  # make sure name doesn't have a leading -
+  $name =~ s|^-|./-|;
+
+  # null name is unprintable, make it '.'
+  if ($name eq '') {
+    $name = ".";
+  }
+  return $name;
+}
+

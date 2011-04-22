@@ -1,0 +1,6 @@
+source ~/.userconfig
+[[ -a $CONF/common/profile ]] && source $CONF/common/profile
+[[ -a $CONF/site/$SITE/profile ]] && source $CONF/site/$SITE/profile
+[[ -a $CONF/plat/$PLAT/profile ]] && source $CONF/plat/$PLAT/profile
+[[ -a $CONF/host/$HOST/profile ]] && source $CONF/host/$HOST/profile
+[[ $1 != NO_BASHRC ]] && source ~/.bashrc

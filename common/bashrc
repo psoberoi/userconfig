@@ -1,0 +1,37 @@
+# ---- aliases
+
+alias ls='ls -bF --color=auto'  # "b" will show control characters as '?'
+                                # "F" will show a trailing "/" after directories
+                                # and a "*" after executables
+
+alias ci='echo Do you REALLY want to run RCS?'   # type 'vi' NOT 'ci' !!
+alias mc='echo Do you REALLY want to run Midnight Commander?'
+
+alias sn='sencap "$@" /unsup/std'
+alias moo='moosic'
+
+# ---- bash options
+
+set -o ignoreeof       # ignore ^D to exit shell
+set -o notify          # report change in jobs' status
+unset MAILCHECK
+
+shopt -s cdspell
+shopt -s checkhash
+shopt -s checkwinsize
+shopt -s histappend
+shopt -s no_empty_cmd_completion
+
+PS1="\h(\!)[\w]\\\$ "
+
+# ---- other env settings
+
+export PYTHONSTARTUP=$HOME/.pythonstartup
+export EDITOR=vim
+
+export PAGER='less'    # make less be the default pager
+export LESS='-m'       # make less give a better prompting
+
+# #MAILPATH=$HOME/mail/mbox:/var/spool/mail/$USER
+# MAILPATH=/var/spool/mail/$USER
+

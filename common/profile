@@ -1,0 +1,22 @@
+export PATH=~/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin
+export BASH_ENV=~/.profile
+
+# Locally installed software
+STD=/home/param/sw/std
+export PATH=$PATH:$STD/bin
+export CPATH=$STD/include
+export LIBRARY_PATH=$STD/lib
+export LD_LIBRARY_PATH=$STD/lib
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$STD/lib/pkgconfig
+export BONOBO_ACTIVATION_PATH=$STD/lib/bonobo/servers
+export PYTHONPATH=$STD/lib/python
+export PERLLIB=$STD/lib/perl5
+
+# # Java
+# export CLASSPATH=
+# for i in $STD/lib/java/*.jar; do
+#     export CLASSPATH=$CLASSPATH:$i
+# done
+# 
+# # # Tcl (for snack sound processing toolkit)
+# # export TCLLIBPATH=$STD/lib/snack2.2
