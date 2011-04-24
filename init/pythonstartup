@@ -1,0 +1,11 @@
+import os
+
+f = os.path.join(os.environ['CONF'], 'common', 'pythonstartup')
+if os.path.exists(f): execfile(f)
+f = os.path.join(os.environ['CONF'], 'site', os.environ['SITE'], 'pythonstartup')
+if os.path.exists(f): execfile(f)
+f = os.path.join(os.environ['CONF'], 'host', os.environ['HOST'], 'pythonstartup')
+if os.path.exists(f): execfile(f)
+
+del f
+del os
