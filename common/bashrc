@@ -7,9 +7,6 @@ alias ls='ls -bF --color=auto'  # "b" will show control characters as '?'
 alias ci='echo Do you REALLY want to run RCS?'   # type 'vi' NOT 'ci' !!
 alias mc='echo Do you REALLY want to run Midnight Commander?'
 
-alias sn='sencap "$@" /unsup/std'
-alias moo='moosic'
-
 # ---- bash options
 
 set -o ignoreeof       # ignore ^D to exit shell
