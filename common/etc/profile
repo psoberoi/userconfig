@@ -9,6 +9,8 @@ function del_nonexistent_dirs {
     echo $result
 }
 
+export -f del_nonexistent_dirs
+
 export PATH=\
 ~/bin\
 :$CONF-$SITE/host/$HOST/plat/$PLAT/bin\

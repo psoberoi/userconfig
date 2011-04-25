@@ -4,6 +4,8 @@ function source_if_exists {
     [[ -a $1 ]] && source $1
 }
 
+export -f source_if_exists
+
 source_if_exists $CONF/common/etc/profile
 source_if_exists $CONF/plat/$PLAT/etc/profile
 source_if_exists $CONF-$SITE/etc/profile
