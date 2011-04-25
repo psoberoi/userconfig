@@ -1,0 +1,584 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/">
+<title>How To Setup A Portable Unix Configuration</title>
+<meta name="author" content="Martin Blais">
+<link rel="stylesheet" href="conf_files/style.css" type="text/css">
+</head><body>
+
+<div id="project-header">
+  <a href="http://furius.ca/"><img src="conf_files/furius-logo-w.png" id="logo"></a>
+  <div id="project-home"><a href="http://furius.ca/projects/">Project Home</a></div>
+</div>
+
+<div class="document" id="how-to-setup-a-portable-unix-configuration">
+<h1 class="title">How To Setup A Portable Unix Configuration</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name">
+<col class="docinfo-content">
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Martin Blais</td></tr>
+<tr><th class="docinfo-name">Contact:</th>
+<td><a class="first last reference external" href="mailto:blais@furius.ca">blais@furius.ca</a></td></tr>
+<tr><th class="docinfo-name">Status:</th>
+<td>First draft: 1999-03</td></tr>
+<tr class="field"><th class="docinfo-name">LastUpdate:</th><td class="field-body">$Date$</td>
+<tr class="field"><th class="docinfo-name">Original URL:</th><td class="field-body"><a href="http://furius.ca/projects/doc/conf.html">http://furius.ca/projects/doc/conf.html</a></td>
+</tr>
+</tbody>
+</table>
+<div class="abstract topic">
+<p class="topic-title first">Abstract</p>
+<p>Description of a proven organization system for a user's configuration files
+under UNIX, to support multiple platforms, multiple sites and hosts.</p>
+</div>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#introduction" id="id2">Introduction</a></li>
+<li><a class="reference internal" href="#scopes" id="id3">Scopes</a><ul>
+<li><a class="reference internal" href="#definitions" id="id4">Definitions</a></li>
+<li><a class="reference internal" href="#basic-scopes" id="id5">Basic scopes</a></li>
+<li><a class="reference internal" href="#combined-scopes" id="id6">Combined scopes</a></li>
+<li><a class="reference internal" href="#configuration-files-vs-locally-installated-files" id="id7">Configuration files vs. Locally Installated files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-it-works" id="id8">How it works</a></li>
+<li><a class="reference internal" href="#environment-initialization" id="id9">Environment Initialization</a><ul>
+<li><a class="reference internal" href="#critical-configuration-variables" id="id10">Critical Configuration Variables</a></li>
+<li><a class="reference internal" href="#initialization-levels" id="id11">Initialization Levels</a></li>
+<li><a class="reference internal" href="#scenarios" id="id12">Scenarios</a></li>
+<li><a class="reference internal" href="#constraints" id="id13">Constraints</a></li>
+<li><a class="reference internal" href="#summary-of-bash-init-sequence" id="id14">Summary of Bash init sequence</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#suggested-directory-hierarchy" id="id15">Suggested directory hierarchy</a></li>
+<li><a class="reference internal" href="#personal-backups" id="id16">Personal Backups</a><ul>
+<li><a class="reference internal" href="#archiving-and-indexing-email" id="id17">Archiving and Indexing Email</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#search-path" id="id18">Search Path</a></li>
+<li><a class="reference internal" href="#user-software-installation" id="id19">User Software Installation</a><ul>
+<li><a class="reference internal" href="#autoconf" id="id20">Autoconf</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#propagating-the-display-environment-variable" id="id21">Propagating the DISPLAY environment variable</a></li>
+<li><a class="reference internal" href="#acknowledgements" id="id22">Acknowledgements</a></li>
+</ul>
+</div>
+<!-- 1   Introduction
+2   Scopes
+  2.1  Definitions
+  2.2  Basic scopes
+  2.3  Combined scopes
+  2.4  Configuration files vs. Locally Installated files
+3   How it works
+4   Environment Initialization
+  4.1  Critical Configuration Variables
+  4.2  Initialization Levels
+  4.3  Scenarios
+  4.4  Constraints
+  4.5  Summary of Bash init sequence
+5   Suggested directory hierarchy
+6   Personal Backups
+  6.1  Archiving and Indexing Email
+7   Search Path
+8   User Software Installation
+  8.1  Autoconf
+9   Evaluation sequences
+10  Propagating the DISPLAY environment variable
+11  Acknowledgements -->
+<div class="section" id="introduction">
+<h1><a class="toc-backref" href="#id2">Introduction</a></h1>
+<p>Unix software configuration files come in many varieties.  They are often
+written in many different (often funny) languages, and for the seasoned hacker
+are often the result of many many precious hours of tweaking and learning--in my
+personal case it has become pathological: I dub it the Custom-Configuration
+Syndrome (CCS), hours and hours spent tailoring my environment.</p>
+<p>Obviously, one doesn't want to restart this work everytime he changes location,
+company, school, platform, etc.  Moreover, one may share the same configuration
+say, at home and at work.  For example, my emacs configuration files have been
+growing with me since I first started using it.  For the past almost ten years
+now, I have been using more or less the same setup that I devised to store my
+configuration files efficiently and minimally.</p>
+<p>This document explains how my configuration files are organized, so that they
+are easily portable across various platforms and sites.</p>
+<p>We assume here that this configuration is to happen for a specific user and so
+all the paths mentioned in this document are relative to the user's home
+directory.</p>
+</div>
+<div class="section" id="scopes">
+<h1><a class="toc-backref" href="#id3">Scopes</a></h1>
+<p>It is necessary here to define scopes of applicability to factor the different
+variables that our configuration files are going to apply to.</p>
+<div class="section" id="definitions">
+<h2><a class="toc-backref" href="#id4">Definitions</a></h2>
+<dl class="docutils">
+<dt>version</dt>
+<dd>A specific version of a computer program e.g. the current version of emacs
+is <tt class="docutils literal"><span class="pre">20.3</span></tt>.</dd>
+<dt>host</dt>
+<dd>A specific machine.  We assume here that a host can be uniquely identified
+by its DNS name e.g. <tt class="docutils literal"><span class="pre">vandam.iro.umontreal.ca</span></tt>, and as such the definition
+of host comprises the complete name (i.e. host + domain).</dd>
+<dt>platform</dt>
+<dd>A specific version of an operating system running under a specific computer
+architecture.  Some examples: Solaris 2.5 runing on an ultra-sparc Sun
+machine, IRIX 6.5 running on SGI Octane with mips processor, Linux 2.2 with
+glibc5 running on an intel x486 processor pc.</dd>
+<dt>site</dt>
+<dd>An organization, an institute, a university lab, a software company, your
+home.  In other words, a place where you're logging in.</dd>
+</dl>
+</div>
+<div class="section" id="basic-scopes">
+<h2><a class="toc-backref" href="#id5">Basic scopes</a></h2>
+<ul class="simple">
+<li><strong>common scope</strong>: settings that are to be shared across all platforms;</li>
+<li><strong>site-specific scope</strong>: settings that are only valid at one site;</li>
+<li><strong>platform-specific scope</strong>: settings that are only valid on one platform;</li>
+<li><strong>host-specific scope</strong>: settings that are only valid on one host.</li>
+<li><strong>version-specific scope</strong>: settings that are only valid for certain versions
+of certain software;</li>
+</ul>
+</div>
+<div class="section" id="combined-scopes">
+<h2><a class="toc-backref" href="#id6">Combined scopes</a></h2>
+<p>Of the five basic scopes, the last three ones are of specific interest.
+They can be combined.  Let's examine the possible combinations:</p>
+<ul class="simple">
+<li><strong>site- AND platform- specific scope</strong>:settings that are only valid for a
+certain platform at a certain site.  This combination is common in a
+university setting where there are many labs with different platforms, but
+your account is shared from the same server via NFS;</li>
+<li><strong>host- AND platform- specific scope</strong>: settings that are only valid on a
+certain host under a certain platform.  This is only useful for the case where
+a particular machine is configured with dual-boot to different operating
+systems, for example, Linux and Windows;</li>
+</ul>
+<p>Note that a <strong>site- and host- specific scope</strong> does not
+really make sense, because we assume that a host lies within a specific site.
+The same applies to a <strong>site- and platform- and host- specific
+scope</strong>.  Host means site-host.</p>
+<p>We must note that in practice, the <strong>common</strong>, <strong>site-specific</strong> and
+<strong>platform-specific</strong> scopes cover 99% of the cases.</p>
+</div>
+<div class="section" id="configuration-files-vs-locally-installated-files">
+<h2><a class="toc-backref" href="#id7">Configuration files vs. Locally Installated files</a></h2>
+<p>The essence of the configuration files directory is user-specific
+<em>configuration</em> for your software.  A question arises:  should
+software installed by and for the user only be stored in this
+directory <a class="footnote-reference" href="#install" id="id1">[1]</a>?  Technically, it could, since the different
+scopes support it, and it is easy to get tempted into doing this.  It
+can sometimes be handy to have scripts and other pieces of software
+related to configuration available on all the platforms and sites.</p>
+<p>Installing software in the configuration tree has several drawbacks:</p>
+<ul class="simple">
+<li>The configuration directory tree becomes HUGE.  We don not want
+that, since we want to be able to replicate it at many different
+sites, and manage it under version control (e.g. CVS).  Thus this
+directory should be limited to relatively small text files, and very
+small binaries, only if necessary (for example, my PGP keyring is in
+there).</li>
+<li>Some software that is installed locally at one site may not be
+working at other sites when simply replicated, because it may depend
+on other files at runtime;</li>
+<li>Binary files are not managed efficiently under version control.</li>
+</ul>
+<p>I propose that most of the user's own software installations happen
+under a different root directory else, which we will call the "local
+configuration", and that will be identified with the environment
+variable <tt class="docutils literal"><span class="pre">CONF_LOCAL</span></tt>.  Under this directory, a hierarchy similar to
+the one present under the configuration directory should be present
+(see description below).</p>
+<p>As a degenerate case, <tt class="docutils literal"><span class="pre">CONF_LOCAL</span></tt> can be <tt class="docutils literal"><span class="pre">$HOME</span></tt>, in which case
+the user's home directory would contain <tt class="docutils literal"><span class="pre">~/common</span></tt> and <tt class="docutils literal"><span class="pre">~/plat</span></tt>
+subdirectory hierarchies.</p>
+<table class="docutils footnote" id="install" frame="void" rules="none">
+<colgroup><col class="label"><col></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Note that we do not refer here to machine-wide software
+installations, which are still done in the usual places, i.e. <tt class="docutils literal"><span class="pre">/usr</span></tt>, or
+<tt class="docutils literal"><span class="pre">/usr/local</span></tt> or <tt class="docutils literal"><span class="pre">/opt</span></tt> or wherever.  Sometimes a user wants to install
+software for him only, or perhaps does not officially have root access (for
+example, in a university lab setting).</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="how-it-works">
+<h1><a class="toc-backref" href="#id8">How it works</a></h1>
+<p>Basically, each file is split in scope-specific smaller files.  A main file
+"includes" the scope-specific files with whatever mechanism is provided by
+whatever parsing engine that file is executed by.  If it's a shell script, the
+scope-specific files are are "sourced"; if it's a .emacs lisp file, the
+scope-specific .emacs files are "loaded", etc.</p>
+<p>The dot files that are expected to be found in the user's home directory are
+symbolically linked with a home-made script to do just that.  For example, for
+my .emacs:</p>
+<pre class="literal-block">~/.emacs -&gt; conf/common/etc/emacs
+</pre>
+<p>Note: often, one must pay attention to the order in which the root scripts
+include the other scripts.</p>
+</div>
+<div class="section" id="environment-initialization">
+<h1><a class="toc-backref" href="#id9">Environment Initialization</a></h1>
+<p>Initializing a shell's environment properly is rather important, since
+so many applications depend on it.</p>
+<div class="section" id="critical-configuration-variables">
+<h2><a class="toc-backref" href="#id10">Critical Configuration Variables</a></h2>
+<p>Some environment variables are critical to implement this
+configuration scheme.  In our setup, we assume that the following
+environment variables are always defined.  My configuration files
+depend on the existence of only these variables in their running
+environment.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">HOME</span></tt>: the user's home directory.  This is most often already set
+by the system when logging in;</li>
+<li><tt class="docutils literal"><span class="pre">PLAT</span></tt>: contains a string that uniquely represents the platform.
+One can think of many ways to have this set automatically at login.
+I have succesfully been using GNU's <tt class="docutils literal"><span class="pre">config.guess</span></tt> script which
+does a pretty good job at generating a unique ''canonical name'' for
+the platform you're running on.  It also has the added bonus that
+someone else is maintaining this painful script. It generates
+strings of the general form:  <em>&lt;architecture&gt;-&lt;maker&gt;-&lt;os name&gt;&lt;os
+version&gt;</em>, some examples:  <tt class="docutils literal"><span class="pre">mips-sgi-irix6.5</span></tt>, <tt class="docutils literal"><span class="pre">i686-pc-linux</span></tt>,
+<tt class="docutils literal"><span class="pre">i686-pc-winnt4.0</span></tt>, <tt class="docutils literal"><span class="pre">rs6000-ibm-aix3.2,</span> <span class="pre">sparc-sun-solaris2.4</span></tt>;</li>
+<li><tt class="docutils literal"><span class="pre">SITE</span></tt>: the current site is determined by a unique string.
+Examples are:  <tt class="docutils literal"><span class="pre">unilab</span></tt>, <tt class="docutils literal"><span class="pre">mycompany</span></tt>.  It can be set in the
+<tt class="docutils literal"><span class="pre">.xsession</span></tt> (that's what I do) or could be determined by a
+tailored script that checks for a list of hosts;</li>
+<li><tt class="docutils literal"><span class="pre">HOST</span></tt>: a string that identifies the hosts we're on.  Hosts are
+unique within a specific site, and the host-specific files should be
+located under that site's directory.</li>
+<li><tt class="docutils literal"><span class="pre">CONF</span></tt>: the directory where the configuration files are
+located. It can lie anywhere, but this directory is probably one of
+the user's many <a class="reference external" href="http://furius.ca/projects/doc/projects.html">projects</a>. (For reference, I used
+to use $HOME/conf for a long time, now I put the directory alongside
+my other projects).</li>
+</ul>
+<p>Since there are potentiatlly multiple entry points for the
+initialization files, I set those critical variables in
+<tt class="docutils literal"><span class="pre">$HOME/.conf</span></tt>; here are typical contents:</p>
+<pre class="literal-block">CONF=$HOME/p/conf
+CONF_LOCAL=$HOME/p/conf-local
+PLAT=`$CONF/common/bin/config.guess`
+SITE=home
+HOST=`hostname`  # Linux.
+</pre>
+<p>This can be sourced by the various initialization files.</p>
+</div>
+<div class="section" id="initialization-levels">
+<h2><a class="toc-backref" href="#id11">Initialization Levels</a></h2>
+<p>The initialization files that get run for various shells do not match
+the reality of the various scenarios where we desire specific sets of
+initializations.  To simplify and rationalize the selection of the
+initializations that are performed for each scenario, we define three
+levels of initialization of the environment:</p>
+<ol class="arabic simple">
+<li>conf: Initialize the critical configuration variables (CONF, SITE, ...)</li>
+<li>env: Bourne-shell compatible environment settings (<tt class="docutils literal"><span class="pre">*/env</span></tt>)</li>
+<li>bash: Bash initialization (<tt class="docutils literal"><span class="pre">*/bashrc</span></tt>)</li>
+</ol>
+<p>The trick to creating the configuration correctly is to create generic
+initialization files that detect the various scenarios described above
+and which then dispatch to the initialization levels depending on our
+desire for the various scenarios (see figure).</p>
+<div class="figure">
+<img alt="initdispatch.png" src="conf_files/initdispatch.png">
+</div>
+<p>We create generic dot files in $CONF/init, to which we link, and make
+these dot files invoke the various initialization steps as we need
+them.</p>
+</div>
+<div class="section" id="scenarios">
+<h2><a class="toc-backref" href="#id12">Scenarios</a></h2>
+<p>Here are the scenarios under consideration.</p>
+<p><strong>Scenario</strong>: Logging into the console.</p>
+<blockquote>
+<p>What gets run: /etc/profile + .bash_profile, .profile</p>
+<p>The levels we want: conf, env, bash</p>
+</blockquote>
+<p><strong>Scenario</strong>: Logging into an X11 session.</p>
+<blockquote>
+<p>What gets run: /etc/profile + .bash_profile, .profile</p>
+<p>The levels we want: conf</p>
+<blockquote>
+Note: we could tolerate environment initializations here but I
+find it much cleaner not to have it, it runs a lot less code
+during X session setup, so the chances of something going wrong
+preventing you from logging in are slim.  xprofile is run for
+those minimal initializations.  We do need the basic config
+variables however, for the window manager commands itself.</blockquote>
+</blockquote>
+<p><strong>Scenario</strong>: Remote ssh login.</p>
+<blockquote>
+<p>What gets run: /etc/profile + .bash_profile, .profile</p>
+<p>The levels we want: conf, env, bash</p>
+</blockquote>
+<p><strong>Scenario</strong>: Starting a shell from the virtual terminal: .bashrc</p>
+<blockquote>
+<p>What gets run: /etc/profile + .bash_profile, .profile</p>
+<p>The levels we want: We want: conf, env, bash</p>
+<blockquote>
+An alternative would be to let the X session fully initialize its
+environment and to do nothing here.  This would make the shells
+start very very fast.  A disadvantage with this method is that you
+cannot simply change the init files and then restart a virtual
+terminal, you have to fully log out to change your shells'
+environments.</blockquote>
+</blockquote>
+<p><strong>Scenario</strong>: Remote ssh command: .bashrc</p>
+<blockquote>
+<p>What gets run: /etc/profile + .bash_profile, .profile</p>
+<p>The levels we want: We want: conf, env</p>
+<blockquote>
+Note that we do not want to run bash specific initializations for
+non-interactive shells, we want to save time, so that the commands
+run as fast as possible.  However, we like to have a setup where
+the environment variables and path have been set correctly.</blockquote>
+</blockquote>
+</div>
+<div class="section" id="constraints">
+<h2><a class="toc-backref" href="#id13">Constraints</a></h2>
+<ul class="simple">
+<li>We need to the variables CONF, CONF_LOCAL, PLAT, SITE, HOST as early
+as possible, and they are potentially different on each machine.</li>
+<li>We cannot run /etc/profile more than once, because a warning is
+issued from bash-completion if you do (due to a read-only variable),
+and some initialization may concatenate path components to
+environment variables multiple times.</li>
+<li>When logging in from a remote shell, we want to have the environment
+setup, but not the bash aliases, so that remote commands run
+reasonably fast.</li>
+<li>We want a consistent clean PATH variable in all scenarios.  We need
+to save the original path that we get after running the profile
+somehow.</li>
+</ul>
+</div>
+<div class="section" id="summary-of-bash-init-sequence">
+<h2><a class="toc-backref" href="#id14">Summary of Bash init sequence</a></h2>
+<p>(For reference.)</p>
+<dl class="docutils">
+<dt>Detection:</dt>
+<dd>Login shell: first char of $0 is '-'
+Interactive shell: PS1 is set and $- includes i</dd>
+</dl>
+<ul>
+<li><p class="first">Interactive</p>
+<ul>
+<li><p class="first">Login</p>
+<blockquote>
+<ol class="arabic simple">
+<li>/etc/profile</li>
+<li>First of: ~/.bash_profile, ~/.bash_login, ~/.profile</li>
+</ol>
+</blockquote>
+</li>
+<li><p class="first">Not-login</p>
+<blockquote>
+<ol class="arabic simple">
+<li>~/.bashrc</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p class="first">Non-interactive</p>
+<blockquote>
+<ol class="arabic simple">
+<li>BASH_ENV, if set.</li>
+</ol>
+</blockquote>
+</li>
+<li><p class="first">When graphical session login script is run, whatever happens
+depends on the Xsession script and on which xdm is used, distribution,
+etc.  For example, gdm checks manually for .profile, .xprofile and
+more.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="suggested-directory-hierarchy">
+<h1><a class="toc-backref" href="#id15">Suggested directory hierarchy</a></h1>
+<p>Here is the suggested hierarchy for the configuration files directory:</p>
+<p>Root of all configuration files:</p>
+<pre class="literal-block">$CONF
+</pre>
+<p>Scope specific directories (see scopes above):</p>
+<pre class="literal-block">$CONF/init/...                             global init files,
+                                           include all the scopes
+
+$CONF/common/...                           common (shared) scope
+
+$CONF/plat/$PLAT/...                       platform scope
+
+$CONF-$SITE/...                            site scope
+$CONF-$SITE/plat/$PLAT/...                 site and platform scope
+$CONF-$SITE/host/$HOST/...                 host scope
+$CONF-$SITE/host/$HOST/plat/$PLAT/...      host and platform scope
+</pre>
+<p>In addition, I use the same principles to manage my local installs (see section
+on this above), that is:</p>
+<pre class="literal-block">$CONF_LOCAL/common/...      common stuff, install logs, very local
+                            or installed scripts that I didn't write
+$CONF_LOCAL/plat/$PLAT/...  platform-specific local installations of software
+</pre>
+<p>Under each of those directories the following files and directories can be
+found:</p>
+<pre class="literal-block">../etc/...         all dot files for that scope
+../etc/env         environment variables (bourne-shell level)
+../etc/bashrc      bash-specific settings and environment
+../etc/inputrc     readline (for bash) keyboard changes
+../etc/emacs     dot emacs
+../etc/Xmodmap     modifications to be made to X keyboard mappings
+../etc/Xclients    X clients to run upon logging in
+../etc/procmailrc  procmail processing
+../etc/            ... LOTS OF OTHER DOT FILES
+
+../bin/            executable scripts
+                   (few and only small binary executables)
+
+../lib/            other files needed by scripts
+../lib/python/     Only custom Python libraries/packages (.py)
+../lib/perl/       Only custom Perl libraries/packages (.pm)
+../lib/java/       java class files (very few and small)
+
+../man/            man pages that I really need outside of
+                   installed applications (very few)
+../include/        non application-installed includes (extremely few)
+../info/           texinfo documentation for stuff installed under
+                   $CONF (not much)
+
+../share/          application data
+../share/images/   images needed for some config stuff
+                   (really few, e.g. some personal window manager icons)
+../share/sounds/   sounds needed for some config stuff
+                   (very small files only, and only what is truly necessary)
+
+../app-defaults/   X application-specific resource files
+
+../elisp/          emacs-lisp files and custom packages
+../elisp/emacs/    specific to GNU emacs
+../elisp/xemacs/   specific to XEmacs (I almost never need it)
+
+../tex/            TeX-related stuff
+../tex/bib/        BibTeX bibliography files
+../tex/bst/        BibTeX style files
+../tex/doc/        LaTeX packages documentation
+../tex/inputs/     LaTeX input files (.sty, .cls)
+
+../gnupg/          public keyring and options file
+                   (store your secret keyring somewhere else)
+
+../src/            source code to be built for stuff that is
+                   absolutely necessary for config purposes (almost nothing)
+
+../log/            logs (note: in local installations subdirectory only)
+</pre>
+<p>Notes: in practice, some of the files have branching using the configuration
+variables when it is convenient.  For example, in my common scope <tt class="docutils literal"><span class="pre">.emacs</span></tt>, I
+often branch on the "site" within that single because it is simpler than doing
+an override in the site-specific file or "not requiring some package" this way.</p>
+</div>
+<div class="section" id="personal-backups">
+<h1><a class="toc-backref" href="#id16">Personal Backups</a></h1>
+<p>Here are a few issues that you want to be aware of when designing a
+system/script for doing your personal backups:</p>
+<ul class="simple">
+<li>It is convenient to generate an <em>index file</em> in the archive media as
+well as keeping a copy of that index file online for doing searches.  A good
+index file contains a list of the shallow directories of the backup that is
+easy to scan;</li>
+<li>You will want to <em>encrypt any sensitive data</em> on your backups, such as
+email, password files, all forms of investment and banking numbers, etc.
+Trust me, the day that your backups get robbed along with the furniture in
+your house, you <strong>WILL</strong> want to know that your data cannot be accessed
+to fake your identity;</li>
+<li>Security through <em>redundancy</em>--storing multiple copies of the same
+backup in different physical locations-- offers a cheap way to insure not
+losing your data;</li>
+<li>It may be a good idea to <em>identify certain data</em> that you may want to
+access all in bulk in the future (such as all email), while you're making the
+backup because when you will have the desire to extract it all in one go from
+your backup media the task of searching for it could be difficult if there are
+no easy string patterns to search for.</li>
+<li>While most of your backup should be kept uncompressed (you will find it
+convenient when you need to actually access it), it may be useful to
+<em>compress certain sets of files</em> that are not meant to be accessed
+(from the backup) in a non-compressed way.</li>
+</ul>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">I have built <a class="reference external" href="http://furius.ca/arnie">Arnie</a>, a Python script to remote incremental
+backups in a simple, naive but reliable way.</p>
+</div>
+<div class="section" id="archiving-and-indexing-email">
+<h2><a class="toc-backref" href="#id17">Archiving and Indexing Email</a></h2>
+<p>Eventually, when gigabytes are a laughable and meaningless quantity of data, I
+would like to group all my email from all my backups and generate a searchable
+index of it, by parsing the headers and generating keywords from the bodies
+texts.</p>
+</div>
+</div>
+<div class="section" id="search-path">
+<h1><a class="toc-backref" href="#id18">Search Path</a></h1>
+<p>Let's examine the path we need to setup for accessing all the scripts the stuff
+that may be in this configuration.  The following directories should be included
+in the path, if they exist:</p>
+<pre class="literal-block">$CONF/common/bin
+$CONF/plat/$PLAT/bin
+$CONF-$SITE/bin
+$CONF-$SITE/plat/$PLAT/bin
+$CONF-$SITE/host/$HOST/bin
+$CONF-$SITE/host/$HOST/plat/$PLAT/bin
+$CONF_LOCAL/common/bin
+$CONF_LOCAL/plat/$PLAT/bin
+</pre>
+<p>This makes a pretty long addition to your path. With many UNIX shells, a longer
+path means a slower lookup for your executables.</p>
+<p>A better way to make up the path is to have a script filter out those parts of
+the path that don't exist.  Working this way, the same script can also be reused
+for for sh- and csh- derived shells, helping maintain consistency and reduce the
+overhead of maintenance of environment scripts if you use multiple shells.  The
+same principle applies to the library search path LD_LIBRARY_PATH.</p>
+</div>
+<div class="section" id="user-software-installation">
+<h1><a class="toc-backref" href="#id19">User Software Installation</a></h1>
+<p>If you compile lots of free/open source software, if may be worthwhile to keep
+logs of how you compiled certain software. The need for this is reduced under
+Linux now that this information can often be packaged within the different
+packaging systems (such as RPM).</p>
+<div class="section" id="autoconf">
+<h2><a class="toc-backref" href="#id20">Autoconf</a></h2>
+<p>Installing new software that is using autoconf should be easy.
+You can use the following command:</p>
+<pre class="literal-block">./configure --prefix=$CONF_LOCAL/plat/$PLAT
+</pre>
+<p>...or if you use multiple platforms at your site:</p>
+<pre class="literal-block">./configure --prefix=$CONF_LOCAL/common --exec-prefix=$CONF_LOCAL/plat/$PLAT
+</pre>
+</div>
+</div>
+<div class="section" id="propagating-the-display-environment-variable">
+<h1><a class="toc-backref" href="#id21">Propagating the DISPLAY environment variable</a></h1>
+<p>When remote logging to a machine from an X session, it is convenient to have the
+DISPLAY environment variable be propagated automatically to the remote session.
+This is easily carried out if your account is NFS-mounted on the remote machine:
+a file containing your current DISPLAY can be read and the display set from
+that.  This file can be automatically create at the time where you log on to
+your X session.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h1><a class="toc-backref" href="#id22">Acknowledgements</a></h1>
+<p>Many of the ideas present in this document originate from interesting
+discussions with Stefan Monnier and Dominik Madon, a long time ago
+while we were at EPFL (1994-1995).</p>
+</div>
+</div>
+</body></html>
