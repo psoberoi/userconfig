@@ -1,4 +1,4 @@
-export PATH=~/bin:$CONF/common/bin:$CONF/site/$SITE/bin:$CONF/host/$HOST/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin
+export PATH=~/bin:$CONF/host/$HOST/bin:$CONF/plat/$PLAT/bin:$CONF/site/$SITE/bin:$CONF/common/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin
 export BASH_ENV=~/.profile
 
 # Locally installed software

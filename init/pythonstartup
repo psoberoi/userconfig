@@ -1,11 +1,18 @@
 import os
 
-f = os.path.join(os.environ['CONF'], 'common', 'pythonstartup')
+f = os.path.join(os.environ['CONF'], 'common', 'etc', 'pythonstartup')
 if os.path.exists(f): execfile(f)
-f = os.path.join(os.environ['CONF'], 'site', os.environ['SITE'], 'pythonstartup')
-if os.path.exists(f): execfile(f)
-f = os.path.join(os.environ['CONF'], 'host', os.environ['HOST'], 'pythonstartup')
-if os.path.exists(f): execfile(f)
+
+# uncomment these when site/plat/host configs are added
+
+# f = os.path.join(os.environ['CONF'], 'site', os.environ['SITE'], 'etc', 'pythonstartup')
+# if os.path.exists(f): execfile(f)
+
+# f = os.path.join(os.environ['CONF'], 'plat', os.environ['PLAT'], 'etc', 'pythonstartup')
+# if os.path.exists(f): execfile(f)
+
+# f = os.path.join(os.environ['CONF'], 'host', os.environ['HOST'], 'etc', 'pythonstartup')
+# if os.path.exists(f): execfile(f)
 
 del f
 del os

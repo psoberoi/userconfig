@@ -1,1 +1,1 @@
-source $CONF/common/vimrc
+source $CONF/common/etc/vimrc
