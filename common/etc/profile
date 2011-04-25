@@ -1,4 +1,30 @@
-export PATH=~/bin:$CONF/host/$HOST/bin:$CONF/plat/$PLAT/bin:$CONF/site/$SITE/bin:$CONF/common/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin
+function del_nonexistent_dirs {
+    local result
+    for p in ${1//:/ }; do
+        if [[ -d $p ]]; then
+            # if result is set, prepend result and colon
+            result="${result:+$result:}$p"
+        fi
+    done
+    echo $result
+}
+
+export PATH=\
+~/bin\
+:$CONF-$SITE/host/$HOST/plat/$PLAT/bin\
+:$CONF-$SITE/host/$HOST/bin\
+:$CONF-$SITE/plat/$PLAT/bin\
+:$CONF-$SITE/bin\
+:$CONF/plat/$PLAT/bin\
+:$CONF/common/bin\
+:/usr/local/bin\
+:/usr/local/sbin\
+:/usr/bin\
+:/usr/sbin\
+:/bin\
+:/sbin
+
+export PATH=`del_nonexistent_dirs $PATH`
 export BASH_ENV=~/.profile
 
 # Locally installed software
