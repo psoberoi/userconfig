@@ -1,0 +1,1 @@
+exec /usr/share/vim/vim*/macros/less.sh "$@"
