@@ -1,6 +1,14 @@
 source ~/.userconfig
-[[ -a $CONF/common/etc/profile ]] && source $CONF/common/etc/profile
-[[ -a $CONF/site/$SITE/etc/profile ]] && source $CONF/site/$SITE/etc/profile
-[[ -a $CONF/plat/$PLAT/etc/profile ]] && source $CONF/plat/$PLAT/etc/profile
-[[ -a $CONF/host/$HOST/etc/profile ]] && source $CONF/host/$HOST/etc/profile
+
+function source_if_exists {
+    [[ -a $1 ]] && source $1
+}
+
+source_if_exists $CONF/common/etc/profile
+source_if_exists $CONF/plat/$PLAT/etc/profile
+source_if_exists $CONF-$SITE/etc/profile
+source_if_exists $CONF-$SITE/plat/$PLAT/etc/profile
+source_if_exists $CONF-$SITE/host/$HOST/etc/profile
+source_if_exists $CONF-$SITE/host/$HOST/plat/$PLAT/etc/profile
+
 [[ $1 != NO_BASHRC ]] && source ~/.bashrc

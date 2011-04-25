@@ -1,5 +1,8 @@
 [[ -z $CONF ]] && source ~/.profile NO_BASHRC
-[[ -a $CONF/common/etc/bashrc ]] && source $CONF/common/etc/bashrc
-[[ -a $CONF/site/$SITE/etc/bashrc ]] && source $CONF/site/$SITE/etc/bashrc
-[[ -a $CONF/plat/$PLAT/etc/bashrc ]] && source $CONF/plat/$PLAT/etc/bashrc
-[[ -a $CONF/host/$HOST/etc/bashrc ]] && source $CONF/host/$HOST/etc/bashrc
+
+source_if_exists $CONF/common/etc/bashrc
+source_if_exists $CONF/plat/$PLAT/etc/bashrc
+source_if_exists $CONF-$SITE/etc/bashrc
+source_if_exists $CONF-$SITE/plat/$PLAT/etc/bashrc
+source_if_exists $CONF-$SITE/host/$HOST/etc/bashrc
+source_if_exists $CONF-$SITE/host/$HOST/plat/$PLAT/etc/bashrc
