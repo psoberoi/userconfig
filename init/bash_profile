@@ -1,0 +1,24 @@
+source ~/.userconfig
+
+function userconfig_dirs {
+    echo \
+      $CONF/common \
+      $CONF/plat/$PLAT \
+      $CONF-$SITE \
+      $CONF-$SITE/plat/$PLAT \
+      $CONF-$SITE/host/$HOST \
+      $CONF-$SITE/host/$HOST/plat/$PLAT
+}
+
+function source_if_exists {
+    [[ -a $1 ]] && source $1
+}
+
+export -f userconfig_dirs
+export -f source_if_exists
+
+for d in `userconfig_dirs`; do
+    source_if_exists $d/etc/bash_profile
+done
+
+[[ $1 != NO_BASHRC ]] && source ~/.bashrc

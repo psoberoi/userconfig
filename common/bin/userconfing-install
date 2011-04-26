@@ -3,13 +3,13 @@
 function install_link {
     dst="$HOME/.$1"
     if [[ -a $dst ]]; then
-	if diff $dst "/etc/skel/.$1" 2>/dev/null || [[ -L $dst ]] ; then
-	    ln -s "$CONF/init/$1" $dst
+	if [[ -L $dst ]] || diff $dst "/etc/skel/.$1" >/dev/null 2>&1 ; then
+            true
 	else
 	    mv $dst "$HOME/old-$1"
-	    ln -s "$CONF/init/$1" $dst	    
 	fi
     fi
+    ln -sf "$CONF/init/$1" $dst
 }
 
 if [[ -z $CONF ]] || [[ -z $HOME ]] ; then

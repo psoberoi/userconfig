@@ -1,8 +1,5 @@
 [[ -z $CONF ]] && source ~/.profile NO_BASHRC
 
-source_if_exists $CONF/common/etc/bashrc
-source_if_exists $CONF/plat/$PLAT/etc/bashrc
-source_if_exists $CONF-$SITE/etc/bashrc
-source_if_exists $CONF-$SITE/plat/$PLAT/etc/bashrc
-source_if_exists $CONF-$SITE/host/$HOST/etc/bashrc
-source_if_exists $CONF-$SITE/host/$HOST/plat/$PLAT/etc/bashrc
+for d in `userconfig_dirs`; do
+    source_if_exists $d/etc/bashrc
+done
