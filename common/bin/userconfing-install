@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function install_link {
+    dst="$HOME/.$1"
+    if [[ -a $dst ]]; then
+	if diff $dst "/etc/skel/.$1" 2>/dev/null || [[ -L $dst ]] ; then
+	    ln -s "$CONF/init/$1" $dst
+	else
+	    mv $dst "$HOME/old-$1"
+	    ln -s "$CONF/init/$1" $dst	    
+	fi
+    fi
+}
+
+if [[ -z $CONF ]] || [[ -z $HOME ]] ; then
+    echo `basename $0`: CONF and HOME must be set
+    exit
+fi
+for i in `ls $CONF/init`; do install_link $i; done
