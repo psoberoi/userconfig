@@ -1,5 +1,5 @@
 [[ -z $CONF ]] && source ~/.profile NO_BASHRC
 
-for d in `userconfig_dirs`; do
+for d in $USERCONFIG_DIRS; do
     source_if_exists $d/etc/bashrc
 done
