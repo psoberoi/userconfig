@@ -28,7 +28,7 @@ export PATH=\
 :/sbin
 
 export PATH=`del_nonexistent_dirs $PATH`
-export BASH_ENV=~/.profile
+export BASH_ENV=~/.bash_profile
 
 # Locally installed software
 if [[ -n $SW ]]; then
