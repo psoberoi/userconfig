@@ -1,4 +1,4 @@
-[[ -z $CONF ]] && source ~/.profile NO_BASHRC
+[[ -z $CONF ]] && source ~/.bash_profile NO_BASHRC
 
 for d in $USERCONFIG_DIRS; do
     source_if_exists $d/etc/bashrc
