@@ -17,3 +17,7 @@
 (setq inhibit-startup-message t
       whitespace-style '(trailing tabs)
       uniquify-buffer-name-style 'forward)
+
+; what about tabs?
+; menu auto complete (lacarte)
+; can .emacs be a symlink
