@@ -18,6 +18,8 @@
       whitespace-style '(trailing tabs)
       uniquify-buffer-name-style 'forward)
 
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
+
 ; what about tabs?
 ; menu auto complete (lacarte)
 ; can .emacs be a symlink
