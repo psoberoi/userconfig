@@ -20,7 +20,9 @@
       uniquify-buffer-name-style 'forward)
 
 (set-default 'indent-tabs-mode nil)
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
 
 ; TODO
 ; menu auto complete (lacarte)?
-; turn off backup files
+; full includes
+; windows init
