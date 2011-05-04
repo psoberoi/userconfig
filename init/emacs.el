@@ -15,9 +15,12 @@
 (global-whitespace-mode 1)
 
 (setq inhibit-startup-message t
-      whitespace-style '(trailing tabs)
+      make-backup-files nil
+      whitespace-style '(face trailing tabs tab-mark)
       uniquify-buffer-name-style 'forward)
 
-; what about tabs?
-; menu auto complete (lacarte)
-; can .emacs be a symlink
+(set-default 'indent-tabs-mode nil)
+
+; TODO
+; menu auto complete (lacarte)?
+; turn off backup files
