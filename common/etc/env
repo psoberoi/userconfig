@@ -28,7 +28,7 @@ export PATH=\
 :/sbin
 
 export PATH=`del_nonexistent_dirs $PATH`
-export BASH_ENV=~/.bash_profile
+export BASH_ENV=~/.bashrc
 
 # Locally installed software
 if [[ -n $SW ]]; then
@@ -51,3 +51,13 @@ if [[ -n $SW ]]; then
     # # # Tcl (for snack sound processing toolkit)
     # # export TCLLIBPATH=$STD/lib/snack2.2
 fi
+
+export PYTHONSTARTUP=$HOME/.pythonstartup
+export EDITOR=vim
+
+export PAGER='less'
+export LESS='-M'       # make less give a better prompting
+
+PS1="\h(\!)[\w]\\\$ "
+PROMPT_COMMAND="history -a"
+

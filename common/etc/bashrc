@@ -19,17 +19,8 @@ shopt -s checkwinsize
 shopt -s histappend
 shopt -s no_empty_cmd_completion
 
-PS1="\h(\!)[\w]\\\$ "
-PROMPT_COMMAND="history -a"
-
-# ---- other env settings
-
-export PYTHONSTARTUP=$HOME/.pythonstartup
-export EDITOR=vim
-
-export PAGER='less'    # make less be the default pager
-export LESS='-m'       # make less give a better prompting
-
-# #MAILPATH=$HOME/mail/mbox:/var/spool/mail/$USER
-# MAILPATH=/var/spool/mail/$USER
-
+case $TERM in
+    xterm*|screen)
+        PS1="\[\033]0;\u@\h:\w\007\]$PS1"
+        ;;
+esac
