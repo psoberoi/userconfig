@@ -58,6 +58,6 @@ export EDITOR=vim
 export PAGER='less'
 export LESS='-M'       # make less give a better prompting
 
-PS1="\h(\!)[\w]\\\$ "
-PROMPT_COMMAND="history -a"
+export PS1="\h(\!)[\w]\\\$ "
+export PROMPT_COMMAND="history -a"
 
