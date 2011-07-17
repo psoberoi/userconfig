@@ -12,6 +12,7 @@ alias mc='echo Do you REALLY want to run Midnight Commander?'
 set -o ignoreeof       # ignore ^D to exit shell
 set -o notify          # report change in jobs' status
 unset MAILCHECK
+umask 0002
 
 shopt -s cdspell
 shopt -s checkhash
