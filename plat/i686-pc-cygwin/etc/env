@@ -1,6 +1,15 @@
-# TMP and TEMP are defined in the Windows environment.  Leaving
+# TMP and TEMP are undefined in the Windows environment.  Leaving
 # them set to the default Windows temporary directory can have
 # unexpected consequences.
 unset TMP
 unset TEMP
+
+export SSH_AUTH_SOCK=/tmp/.ssh-socket
+
+ssh-add -l >/dev/null 2>&1
+if [ $? = 2 ]; then
+  # Exit status 2 means couldn't connect to ssh-agent; start one now
+  ssh-agent -a $SSH_AUTH_SOCK >/tmp/.ssh-agent-script
+fi
+. /tmp/.ssh-agent-script > /dev/null
 
