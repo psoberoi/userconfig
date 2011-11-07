@@ -22,9 +22,13 @@
 (set-default 'indent-tabs-mode nil)
 (set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
 
+(require 'deft)
+(setq deft-use-filename-as-title t)
+
+(load-library "revert")
+
 (server-start)
 
 ; TODO
 ; menu auto complete (lacarte)?
-; full includes
 ; windows init
