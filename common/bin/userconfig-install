@@ -3,17 +3,35 @@
 function install_link {
     dst="$HOME/.$1"
     if [[ -a $dst ]]; then
-	if [[ -L $dst ]] || diff $dst "/etc/skel/.$1" >/dev/null 2>&1 ; then
+        if [[ -L $dst ]] || diff $dst "/etc/skel/.$1" >/dev/null 2>&1 ; then
             true
-	else
-	    mv $dst "$HOME/old-$1"
-	fi
+        else
+            mv $dst "$HOME/old-$1"
+        fi
     fi
+    echo installing $dst
     ln -sf "$CONF/init/$1" $dst
 }
 
-if [[ -z $CONF ]] || [[ -z $HOME ]] ; then
-    echo `basename $0`: CONF and HOME must be set
+if [[ -z $HOME ]] ; then
+    echo `basename $0`: ERROR: HOME must be set
     exit
 fi
+
+source $HOME/.userconfig
+
+if [[ -z $CONF ]] ; then
+    echo `basename $0`: ERROR: CONF must be set
+    exit
+fi
+
 for i in `ls $CONF/init`; do install_link $i; done
+
+for d in $USERCONFIG_DIRS; do
+    if [[ -d $d/etc/install.d ]]; then
+        for f in `ls $d/etc/install.d/*`; do
+            echo running $f
+            source $f
+        done
+    fi
+done
