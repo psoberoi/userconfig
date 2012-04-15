@@ -7,12 +7,16 @@ alias ls='ls -bF --color=auto'  # "b" will show control characters as '?'
 alias ci='echo Do you REALLY want to run RCS?'   # type 'vi' NOT 'ci' !!
 alias mc='echo Do you REALLY want to run Midnight Commander?'
 
-# ---- bash options
+# ---- terminal settings
 
-set -o ignoreeof       # ignore ^D to exit shell
-set -o notify          # report change in jobs' status
+stty -ixon              # No flow control
 unset MAILCHECK
 umask 0002
+
+# ---- bash options
+
+set -o ignoreeof        # ignore ^D to exit shell
+set -o notify           # report change in jobs' status
 
 shopt -s cdspell
 shopt -s checkhash
