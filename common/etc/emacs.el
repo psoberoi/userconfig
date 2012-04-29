@@ -19,6 +19,9 @@
       whitespace-style '(face trailing tabs tab-mark)
       uniquify-buffer-name-style 'forward)
 
+(setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+
 (set-default 'indent-tabs-mode nil)
 (set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
 
