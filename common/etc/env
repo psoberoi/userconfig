@@ -52,6 +52,11 @@ if [[ -n $SW ]]; then
     # # export TCLLIBPATH=$STD/lib/snack2.2
 fi
 
+if [[ -n /usr/local/plan9 ]]; then
+    export PLAN9=/usr/local/plan9
+    export PATH=$PATH:$PLAN9/bin
+fi
+
 export PYTHONSTARTUP=$HOME/.pythonstartup
 export EDITOR=vim
 
