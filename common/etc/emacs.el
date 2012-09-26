@@ -23,7 +23,6 @@
         `((".*" ,temporary-file-directory t)))
 
 (set-default 'indent-tabs-mode nil)
-(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
 
 (require 'deft)
 (setq deft-use-filename-as-title t)
@@ -31,6 +30,8 @@
 (load-library "revert")
 
 (server-start)
+
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
 
 ; TODO
 ; menu auto complete (lacarte)?
