@@ -19,6 +19,12 @@
       whitespace-style '(face trailing tabs tab-mark)
       uniquify-buffer-name-style 'forward)
 
+(custom-set-faces
+        ; used by the trailing-whitespace variable
+        '(trailing-whitespace ((t (:background "lavender"))))
+        ; used by whitespace-mode (this is what is enabled above)
+        '(whitespace-trailing ((t (:background "lavender")))))
+
 (setq auto-save-file-name-transforms
         `((".*" ,temporary-file-directory t)))
 

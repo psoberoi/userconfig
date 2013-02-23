@@ -1,0 +1,4 @@
+echo Please copy the the emacs init file:
+echo from: ~/userconfig/plat/i686-pc-cygwin/etc/windows-emacs.el
+echo to: /Users/paramjit/Appdata/Roaming/.emacs.el
+
