@@ -15,6 +15,7 @@
 (global-whitespace-mode 1)
 
 (setq inhibit-startup-message t
+      c-basic-offset 4
       make-backup-files nil
       whitespace-style '(face trailing tabs tab-mark)
       uniquify-buffer-name-style 'forward)
