@@ -3,6 +3,9 @@
 alias ls='ls -bF --color=auto'  # "b" will show control characters as '?'
                                 # "F" will show a trailing "/" after directories
                                 # and a "*" after executables
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 alias ci='echo Do you REALLY want to run RCS?'   # type 'vi' NOT 'ci' !!
 alias mc='echo Do you REALLY want to run Midnight Commander?'
