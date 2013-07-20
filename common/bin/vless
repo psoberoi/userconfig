@@ -1,1 +1,1 @@
-exec /usr/share/vim/vim*/macros/less.sh "$@"
+exec /usr/share/vim/vim[1-9]*/macros/less.sh "$@"

@@ -47,7 +47,7 @@ if [[ -n $SW ]]; then
     # for i in $STD/lib/java/*.jar; do
     #     export CLASSPATH=$CLASSPATH:$i
     # done
-     
+
     # # # Tcl (for snack sound processing toolkit)
     # # export TCLLIBPATH=$STD/lib/snack2.2
 fi

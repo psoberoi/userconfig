@@ -28,7 +28,7 @@ shopt -s no_empty_cmd_completion
 
 if [ -t 0 ]; then       # if stdin is a terminal
     stty -ixon          # no flow control
-fi    
+fi
 
 case $TERM in
     xterm*|screen)
