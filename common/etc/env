@@ -52,6 +52,10 @@ if [[ -n $SW ]]; then
     # # export TCLLIBPATH=$STD/lib/snack2.2
 fi
 
+if [[ -z $LANG ]]; then
+    export LANG="en_US.UTF-8"
+fi
+
 if [[ -d $HOME/perl5 ]]; then
     export PERL_LOCAL_LIB_ROOT="/home/param/perl5";
     export PERL_MB_OPT="--install_base /home/param/perl5";
