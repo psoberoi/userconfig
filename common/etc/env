@@ -71,7 +71,7 @@ export PAGER='less'
 export LESS='-M'       # make less give a better prompting
 
 export PS1="\h(\!)[\w]\\\$ "
-export PROMPT_COMMAND="history -n;history -a"
+export PROMPT_COMMAND="history -a"
 export HISTCONTROL=ignorespace
 export HISTSIZE=2000
 export HISTFILESIZE=5000
