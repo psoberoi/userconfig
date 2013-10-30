@@ -75,4 +75,3 @@ export PROMPT_COMMAND="history -a"
 export HISTCONTROL=ignorespace
 export HISTSIZE=2000
 export HISTFILESIZE=5000
-
