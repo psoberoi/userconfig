@@ -1,4 +1,7 @@
 import os
+import sys
+
+py3 = sys.version_info[0] == 3
 
 def locations():
     conf = os.environ['CONF']
@@ -15,7 +18,12 @@ def locations():
     yield os.path.join(site_host, 'plat', plat, tail)
 
 for f in locations():
-    if os.path.exists(f): execfile(f)
+    if os.path.exists(f):
+        if py3:
+            with open(f) as fp:
+                exec(fp.read())
+        else:
+            execfile(f)
 
 del locations
 del os
