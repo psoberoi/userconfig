@@ -11,6 +11,12 @@ function del_nonexistent_dirs {
 
 export -f del_nonexistent_dirs
 
+if [[ `uname -m` == x86_64 ]]; then
+  MBITS=64
+else
+  MBITS=32
+fi
+
 export PATH=\
 ~/bin\
 :$CONF-$SITE/host/$HOST/plat/$PLAT/bin\
@@ -41,6 +47,11 @@ if [[ -n $SW ]]; then
     export BONOBO_ACTIVATION_PATH=$STD/lib/bonobo/servers
     export PYTHONPATH=$STD/lib/python
     export PERLLIB=$STD/lib/perl5
+
+    if [[ -d $STD/lib$MBITS ]]; then
+        export LIBRARY_PATH=$STD/lib$MBITS:$LIBRARY_PATH
+        export LD_LIBRARY_PATH=$STD/lib$MBITS:$LD_LIBRARY_PATH
+    fi
 
     # # Java
     # export CLASSPATH=
