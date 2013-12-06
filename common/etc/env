@@ -39,11 +39,11 @@ export BASH_ENV=~/.bashrc
 # Locally installed software
 if [[ -n $SW ]]; then
     STD=$SW/std
-    export PATH=$PATH:$STD/bin
+    export PATH=$STD/bin:$PATH
     export CPATH=$STD/include
     export LIBRARY_PATH=$STD/lib
     export LD_LIBRARY_PATH=$STD/lib
-    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$STD/lib/pkgconfig
+    export PKG_CONFIG_PATH=$STD/lib/pkgconfig:/usr/lib/pkgconfig
     export BONOBO_ACTIVATION_PATH=$STD/lib/bonobo/servers
     export PYTHONPATH=$STD/lib/python
     export PERLLIB=$STD/lib/perl5
