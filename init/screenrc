@@ -1,3 +1,6 @@
 defscrollback 30000
 termcapinfo xterm* ti@:te@
 escape "^Ss"
+
+hardstatus alwayslastline
+hardstatus string "screen %-w%{+bu I}%n-%t%{-}%+w"
