@@ -79,7 +79,9 @@ export PYTHONSTARTUP=$HOME/.pythonstartup
 export EDITOR=vim
 
 export PAGER='less'
-export LESS='-M'       # make less give a better prompting
+
+#causes control sequences to appear on screen in OS X - not sure why
+#export LESS='-M'       # make less give a better prompting
 
 export PS1="\h(\!)[\w]\\\$ "
 export PROMPT_COMMAND="history -a"

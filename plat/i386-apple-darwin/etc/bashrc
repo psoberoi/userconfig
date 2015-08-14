@@ -1,1 +1,2 @@
-alias ls='ls -bF'
+# ls on OS X doesn't accept --color - needs -G instead
+alias ls='ls -bFG'
