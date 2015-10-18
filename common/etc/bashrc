@@ -32,6 +32,8 @@ fi
 
 case $TERM in
     xterm*|screen)
-        PS1="\[\033]0;\u@\h:\w\007\]$PS1"
+        # Referencing the previous value of PS1 here used to work
+        # But now it fails mysteriously, so I hardcoded it.
+        PS1="\[\033]0;\u@\h:\w\007\]\h(\!)[\w]\\\$ "
         ;;
 esac
