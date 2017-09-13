@@ -11,12 +11,6 @@ function del_nonexistent_dirs {
 
 export -f del_nonexistent_dirs
 
-if [[ `uname -m` == x86_64 ]]; then
-  MBITS=64
-else
-  MBITS=32
-fi
-
 export PATH=\
 ~/bin\
 :$CONF-$SITE/host/$HOST/plat/$PLAT/bin\
@@ -36,33 +30,6 @@ export PATH=\
 export PATH=`del_nonexistent_dirs $PATH`
 export BASH_ENV=~/.bashrc
 
-# Locally installed software
-if [[ -n $SW ]]; then
-    STD=$SW/std
-    export PATH=$STD/bin:$PATH
-    export CPATH=$STD/include
-    export LIBRARY_PATH=$STD/lib
-    export LD_LIBRARY_PATH=$STD/lib
-    export PKG_CONFIG_PATH=$STD/lib/pkgconfig:/usr/lib/pkgconfig
-    export BONOBO_ACTIVATION_PATH=$STD/lib/bonobo/servers
-    export PYTHONPATH=$STD/lib/python
-    export PERLLIB=$STD/lib/perl5
-
-    if [[ -d $STD/lib$MBITS ]]; then
-        export LIBRARY_PATH=$STD/lib$MBITS:$LIBRARY_PATH
-        export LD_LIBRARY_PATH=$STD/lib$MBITS:$LD_LIBRARY_PATH
-    fi
-
-    # # Java
-    # export CLASSPATH=
-    # for i in $STD/lib/java/*.jar; do
-    #     export CLASSPATH=$CLASSPATH:$i
-    # done
-
-    # # # Tcl (for snack sound processing toolkit)
-    # # export TCLLIBPATH=$STD/lib/snack2.2
-fi
-
 if [[ -z $LANG ]]; then
     export LANG="en_US.UTF-8"
 fi
@@ -75,6 +42,11 @@ if [[ -d $HOME/perl5 ]]; then
     export PATH="$HOME/perl5/bin:$PATH";
 fi
 
+if [[ -d $HOME/sw/google-cloud-sdk ]]; then
+    source $HOME/sw/google-cloud-sdk/completion.bash.inc
+    source $HOME/sw/google-cloud-sdk/path.bash.inc
+fi
+
 export PYTHONSTARTUP=$HOME/.pythonstartup
 export EDITOR=vim
 
@@ -82,9 +54,3 @@ export PAGER='less'
 
 #causes control sequences to appear on screen in OS X - not sure why
 #export LESS='-M'       # make less give a better prompting
-
-export PS1="\h(\!)[\w]\\\$ "
-export PROMPT_COMMAND="history -a"
-export HISTCONTROL=ignorespace
-export HISTSIZE=2000
-export HISTFILESIZE=5000

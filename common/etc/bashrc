@@ -15,7 +15,7 @@ alias mc='echo Do you REALLY want to run Midnight Commander?'
 unset MAILCHECK
 umask 0002
 
-# ---- bash options
+# ---- bash options & enhancements
 
 set -o ignoreeof        # ignore ^D to exit shell
 set -o notify           # report change in jobs' status
@@ -30,10 +30,32 @@ if [ -t 0 ]; then       # if stdin is a terminal
     stty -ixon          # no flow control
 fi
 
+export PS1="\h(\!)[\w]\\\$ "
+export PROMPT_COMMAND="history -a"
+export HISTCONTROL=ignorespace
+export HISTSIZE=2000
+export HISTFILESIZE=5000
+
 case $TERM in
     xterm*|screen)
-        # Referencing the previous value of PS1 here used to work
-        # But now it fails mysteriously, so I hardcoded it.
-        PS1="\[\033]0;\u@\h:\w\007\]\h(\!)[\w]\\\$ "
+        # PS1="\[\033]0;\u@\h:\w\007\]\h(\!)[\w]\\\$ "
+        WTITLE="\u@\h: \w"
+        PROMPT_COMMAND='history -a; echo -ne "\033]0;${WTITLE@P}\007"'
         ;;
 esac
+
+if [[ -f /etc/profile.d/bash_completion.sh ]]; then
+    source /etc/profile.d/bash_completion.sh
+fi
+
+if [[ -d $HOME/sw/google-cloud-sdk ]]; then
+    source $HOME/sw/google-cloud-sdk/completion.bash.inc
+fi
+
+
+# if which powerline-daemon 2>/dev/null; then
+#   powerline-daemon -q
+#   POWERLINE_BASH_CONTINUATION=1
+#   POWERLINE_BASH_SELECT=1
+#   . /usr/share/powerline/bash/powerline.sh
+# fi
