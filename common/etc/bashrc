@@ -53,9 +53,9 @@ if [[ -d $HOME/sw/google-cloud-sdk ]]; then
 fi
 
 
-# if which powerline-daemon 2>/dev/null; then
-#   powerline-daemon -q
-#   POWERLINE_BASH_CONTINUATION=1
-#   POWERLINE_BASH_SELECT=1
-#   . /usr/share/powerline/bash/powerline.sh
-# fi
+if which powerline-daemon >/dev/null 2>&1 ; then
+  powerline-daemon -q
+  POWERLINE_BASH_CONTINUATION=1
+  POWERLINE_BASH_SELECT=1
+  . /usr/share/powerline/bash/powerline.sh
+fi
