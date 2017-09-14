@@ -9,7 +9,9 @@ export USERCONFIG_DIRS="\
   $CONF-$SITE/host/$HOST/plat/$PLAT"
 
 function source_if_exists {
-    [[ -a $1 ]] && source $1
+    if [[ -a $1 ]] ; then
+        source $1
+    fi
 }
 
 export -f source_if_exists
