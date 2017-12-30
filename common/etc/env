@@ -13,6 +13,8 @@ export -f del_nonexistent_dirs
 
 export PATH=\
 ~/bin\
+:~/go/bin\
+:~/.local/bin\
 :$CONF-$SITE/host/$HOST/plat/$PLAT/bin\
 :$CONF-$SITE/host/$HOST/bin\
 :$CONF-$SITE/plat/$PLAT/bin\
