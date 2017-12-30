@@ -66,9 +66,14 @@ if has("autocmd")
 
 endif " has("autocmd")
 
-" zenburn settings
-" :set t_Co=256
-" :let g:zenburn_high_Contrast = 1
-" :colorscheme zenburn
-" :hi search ctermbg=223 ctermfg=238
-" :hi incsearch ctermbg=216 ctermfg=242
+if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
+    filetype off
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'bling/vim-airline'
+    Plugin 'nathangrigg/vim-beancount'
+    call vundle#end()            " required
+    filetype plugin indent on
+endif
+
