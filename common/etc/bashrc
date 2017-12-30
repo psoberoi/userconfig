@@ -36,11 +36,21 @@ export HISTCONTROL=ignorespace
 export HISTSIZE=2000
 export HISTFILESIZE=5000
 
+WTITLE="\u@\h: \w"
+VTE_CMD=""
+function pso_prompt_cmd() {
+  history -a
+  echo -ne "\033]0;${WTITLE@P}\007"
+  $VTE_CMD
+}
+
 case $TERM in
     xterm*|screen)
         # PS1="\[\033]0;\u@\h:\w\007\]\h(\!)[\w]\\\$ "
-        WTITLE="\u@\h: \w"
-        PROMPT_COMMAND='history -a; echo -ne "\033]0;${WTITLE@P}\007"'
+        PROMPT_COMMAND=`pso_prompt_cmd`
+        ;;
+    *)
+        PROMPT_COMMAND="history -a"
         ;;
 esac
 
@@ -52,6 +62,10 @@ if [[ -d $HOME/sw/google-cloud-sdk ]]; then
     source $HOME/sw/google-cloud-sdk/completion.bash.inc
 fi
 
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+    source /etc/profile.d/vte.sh
+    VTE_CMD="__vte_osc7"
+fi
 
 if which powerline-daemon >/dev/null 2>&1 ; then
   powerline-daemon -q
