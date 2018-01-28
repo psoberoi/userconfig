@@ -47,7 +47,7 @@ function pso_prompt_cmd() {
 case $TERM in
     xterm*|screen)
         # PS1="\[\033]0;\u@\h:\w\007\]\h(\!)[\w]\\\$ "
-        PROMPT_COMMAND=`pso_prompt_cmd`
+        PROMPT_COMMAND=pso_prompt_cmd
         ;;
     *)
         PROMPT_COMMAND="history -a"
