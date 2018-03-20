@@ -30,7 +30,7 @@ if [ -t 0 ]; then       # if stdin is a terminal
     stty -ixon          # no flow control
 fi
 
-export PS1="\h(\!)[\w]\\\$ "
+PS1="\h(\!)[\w]\\\$ "
 export PROMPT_COMMAND="history -a"
 export HISTCONTROL=ignorespace
 export HISTSIZE=2000
