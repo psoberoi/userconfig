@@ -64,6 +64,8 @@ if has("autocmd")
     \   exe "normal g`\"" |
     \ endif
 
+   " au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
+
 endif " has("autocmd")
 
 if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
@@ -73,7 +75,13 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'bling/vim-airline'
     Plugin 'nathangrigg/vim-beancount'
+    Plugin 'ledger/vim-ledger'
     call vundle#end()            " required
     filetype plugin indent on
 endif
+
+let g:ledger_bin = '/home/param/.local/bin/hledger'
+let g:ledger_detailed_first = 1
+
+set foldlevel=99
 

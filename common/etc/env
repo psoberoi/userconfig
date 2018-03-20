@@ -56,3 +56,5 @@ export PAGER='less'
 
 #causes control sequences to appear on screen in OS X - not sure why
 #export LESS='-M'       # make less give a better prompting
+
+export LEDGER_FILE="$HOME/files/money/2018/2018.ledger"
