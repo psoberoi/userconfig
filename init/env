@@ -1,4 +1,5 @@
 source ~/.userconfig
+source $CONF/init/functions
 
 export USERCONFIG_DIRS="\
   $CONF/common \
@@ -7,14 +8,6 @@ export USERCONFIG_DIRS="\
   $CONF-$SITE/plat/$PLAT \
   $CONF-$SITE/host/$HOST \
   $CONF-$SITE/host/$HOST/plat/$PLAT"
-
-function source_if_exists {
-    if [[ -a $1 ]] ; then
-        source $1
-    fi
-}
-
-export -f source_if_exists
 
 for d in $USERCONFIG_DIRS; do
     source_if_exists $d/etc/env

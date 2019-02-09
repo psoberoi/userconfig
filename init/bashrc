@@ -1,5 +1,7 @@
 [[ -z $USERCONFIG_DIRS ]] && source ~/.env
 
+source $CONF/init/functions
+
 if [[ "$-" == *i* ]]; then
     for d in $USERCONFIG_DIRS; do
         source_if_exists $d/etc/bashrc
